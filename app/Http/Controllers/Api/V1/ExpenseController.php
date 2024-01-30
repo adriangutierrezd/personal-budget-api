@@ -6,6 +6,8 @@ use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Expense;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\ExpenseCollection;
+
 
 class ExpenseController extends Controller
 {
@@ -14,7 +16,7 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        //
+        return new ExpenseCollection(Expense::all());
     }
 
     /**

@@ -6,6 +6,8 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\CategoryResource;
+use App\Http\Resources\V1\CategoryCollection;
 
 
 class CategoryController extends Controller
@@ -15,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::all();
+        return new CategoryCollection(Category::all());
     }
 
     /**
@@ -39,7 +41,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return new CategoryResource($category);
     }
 
     /**

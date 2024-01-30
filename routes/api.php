@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\ExpenseController;
+use App\Http\Controllers\Api\V1\RecurringController;
+use App\Http\Controllers\Api\V1\RevenueController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function(){
     Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('expenses', ExpenseController::class);
+    Route::apiResource('recurrings', RecurringController::class);
+    Route::apiResource('revenues', RevenueController::class);
 });
