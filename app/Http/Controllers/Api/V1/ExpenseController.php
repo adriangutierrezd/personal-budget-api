@@ -7,16 +7,29 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Models\Expense;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\ExpenseCollection;
-
+use App\Filters\V1\ExpensesFilter;
+use App\Http\Resources\V1\ExpenseResource;
+use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return new ExpenseCollection(Expense::all());
+        $filter = new ExpensesFilter();
+        $queryItems = $filter->transform($request);
+
+        $includeCategories = $request->query('includeCategories');
+
+        $expenses = Expense::where($queryItems);
+
+        if($includeCategories){
+            $expenses->with('category');
+        }
+
+        return new ExpenseCollection($expenses->paginate()->appends($request->query()));
     }
 
     /**
@@ -40,7 +53,14 @@ class ExpenseController extends Controller
      */
     public function show(Expense $expense)
     {
-        //
+
+        $includeCategories = request()->query('includeCategories');
+
+        if($includeCategories){
+            return new ExpenseResource($expense->loadMissing('category'));
+        }
+        
+        return new ExpenseResource($expense);
     }
 
     /**

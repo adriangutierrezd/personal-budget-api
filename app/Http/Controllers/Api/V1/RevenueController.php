@@ -6,15 +6,27 @@ use App\Http\Requests\StoreRevenueRequest;
 use App\Http\Requests\UpdateRevenueRequest;
 use App\Models\Revenue;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\RevenueCollection;
+use App\Http\Resources\V1\RevenueResource;
+use App\Filters\V1\RevenuesFilter;
+use Illuminate\Http\Request;
 
 class RevenueController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $filter = new RevenuesFilter();
+        $queryItems = $filter->transform($request);
+
+        if(empty($queryItems)){
+            return new RevenueCollection(Revenue::paginate());
+        }else{
+            $revenues = Revenue::where($queryItems)->paginate();
+            return new RevenueCollection($revenues->appends($request->query()));
+        }
     }
 
     /**
@@ -38,7 +50,7 @@ class RevenueController extends Controller
      */
     public function show(Revenue $revenue)
     {
-        //
+        return new RevenueResource($revenue);
     }
 
     /**

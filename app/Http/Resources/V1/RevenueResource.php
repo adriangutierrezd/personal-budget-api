@@ -14,6 +14,16 @@ class RevenueResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'userId' => $this->user_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'date' => $this->date,
+            'week' => $this->week,
+            'month' => $this->month,
+            'year' => $this->year,
+            'amount' => $this->amount
+        ];
     }
 }

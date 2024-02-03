@@ -6,16 +6,27 @@ use App\Http\Requests\StoreRecurringRequest;
 use App\Http\Requests\UpdateRecurringRequest;
 use App\Models\Recurring;
 use App\Http\Controllers\Controller;
-
+use App\Http\Resources\V1\RecurringCollection;
+use App\Http\Resources\V1\RecurringResource;
+use App\Filters\V1\RecurringsFilter;
+use Illuminate\Http\Request;
 
 class RecurringController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $filter = new RecurringsFilter();
+        $queryItems = $filter->transform($request);
+
+        if(empty($queryItems)){
+            return new RecurringCollection(Recurring::paginate());
+        }else{
+            $recurrings = Recurring::where($queryItems)->paginate();
+            return new RecurringCollection($recurrings->appends($request->query()));
+        }
     }
 
     /**
@@ -39,7 +50,7 @@ class RecurringController extends Controller
      */
     public function show(Recurring $recurring)
     {
-        //
+        return new RecurringResource($recurring);
     }
 
     /**

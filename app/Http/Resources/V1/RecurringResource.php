@@ -14,6 +14,13 @@ class RecurringResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'userId' => $this->user_id,
+            'categoryId' => $this->category_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'amount' => $this->amount
+        ];
     }
 }

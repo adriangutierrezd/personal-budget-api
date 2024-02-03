@@ -24,7 +24,8 @@ class ExpenseResource extends JsonResource
             'week' => $this->week,
             'month' => $this->month,
             'year' => $this->year,
-            'amount' => $this->amount
+            'amount' => $this->amount,
+            'category' => new CategoryResource($this->whenLoaded('category'))
         ];
     }
 }
