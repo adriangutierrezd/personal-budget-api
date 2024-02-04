@@ -22,7 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function(){
+Route::group([
+    'prefix' => 'v1',
+    'namespace' => 'App\Http\Controllers\Api\V1',
+    'middleware' => 'auth:sanctum'
+], function(){
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('recurrings', RecurringController::class);

@@ -9,14 +9,11 @@ class CategoriesFilter extends ApiFilter{
 
     protected $allowedParams = [
         'id' => ['eq'],
-        'userId' => ['eq'],
         'name' => ['eq'],
         'color' => ['eq']
     ];
 
-    protected $columnMap = [
-        'userId' => 'user_id'
-    ];
+    protected $columnMap = [];
 
     protected $operatorMap = [
         'eq' => '=',

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\V1;
 
 use App\Models\Expense;
 use App\Models\User;

@@ -10,18 +10,23 @@ use App\Http\Resources\V1\CategoryResource;
 use App\Http\Resources\V1\CategoryCollection;
 use Illuminate\Http\Request;
 use App\Filters\V1\CategoriesFilter;
+use App\Policies\V1\CategoryPolicy;
 
 
 class CategoryController extends Controller
 {
+    
     /**
-     * Display a listing of the resource.
+     * Retrieves a listing of resources
      */
     public function index(Request $request)
     {
         $filter = new CategoriesFilter();
         $queryItems = $filter->transform($request);
-        $categories = Category::where($queryItems)->paginate();
+        $categories = Category::where([
+            ...$queryItems,
+            'user_id' => $request->user()->id
+        ])->paginate();
         return new CategoryCollection($categories->appends($request->query()));
     }
 
@@ -30,14 +35,21 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        return new CategoryResource(Category::create($request->all()));
+        return new CategoryResource(Category::create([
+            ...$request->all(),
+            'user_id' => $request->user()->id
+        ]));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function show(Request $request, Category $category)
     {
+        if($request->user()->cannot('show', [$category, CategoryPolicy::class])){
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         return new CategoryResource($category);
     }
 
@@ -46,14 +58,21 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category->update($request->all());
+        $category->update([
+            ...$request->all(),
+            'user_id' => $request->user()->id
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Request $request, Category $category)
     {
-        //
+        if($request->user()->cannot('delete', [$category, CategoryPolicy::class])){
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $category->delete();
     }
 }

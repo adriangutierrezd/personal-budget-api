@@ -4,14 +4,14 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user() != null;
+        return true;
     }
 
     /**
@@ -22,16 +22,15 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:100'],
-            'color' => ['required', 'max:7']
+            'name' => ['required'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/[A-Z]/',
+                'regex:/[a-z]/',
+                'regex:/[0-9]/'
+            ],
         ];
     }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'user_id' => $this->userId
-        ]);
-    }
-
 }

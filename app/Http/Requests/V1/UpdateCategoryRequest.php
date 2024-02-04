@@ -3,15 +3,20 @@
 namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Policies\V1\CategoryPolicy;
+use App\Models\Category;
+
 
 class UpdateCategoryRequest extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        $category = $this->route('category');
+        return $this->user() != null && $this->user()->can('update', [$category, CategoryPolicy::class]);
     }
 
     /**
@@ -26,24 +31,14 @@ class UpdateCategoryRequest extends FormRequest
         if($method === 'PUT'){
             return [
                 'name' => ['required', 'max:100'],
-                'color' => ['required', 'max:7'],
-                'userId' => ['required', 'exists:users,id']
+                'color' => ['required', 'max:7']
             ];
         }else{
             return [
                 'name' => ['sometimes', 'required', 'max:100'],
-                'color' => ['sometimes', 'required', 'max:7'],
-                'userId' => ['sometimes', 'required', 'exists:users,id']
+                'color' => ['sometimes', 'required', 'max:7']
             ];
         }
     }
 
-    protected function prepareForValidation()
-    {
-        if($this->userId){
-            $this->merge([
-                'user_id' => $this->userId
-            ]);
-        }
-    }
 }
