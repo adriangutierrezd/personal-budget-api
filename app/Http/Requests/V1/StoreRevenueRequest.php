@@ -11,7 +11,7 @@ class StoreRevenueRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user() != null;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreRevenueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'max:100'],
+            'description' => ['sometimes'],
+            'date' => ['required', 'date'],
+            'amount' => ['required', 'numeric']
         ];
     }
 }

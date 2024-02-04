@@ -10,6 +10,7 @@ use App\Http\Resources\V1\RevenueCollection;
 use App\Http\Resources\V1\RevenueResource;
 use App\Filters\V1\RevenuesFilter;
 use Illuminate\Http\Request;
+use App\Policies\V1\RevenuePolicy;
 
 class RevenueController extends Controller
 {
@@ -21,20 +22,11 @@ class RevenueController extends Controller
         $filter = new RevenuesFilter();
         $queryItems = $filter->transform($request);
 
-        if(empty($queryItems)){
-            return new RevenueCollection(Revenue::paginate());
-        }else{
-            $revenues = Revenue::where($queryItems)->paginate();
-            return new RevenueCollection($revenues->appends($request->query()));
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $revenues = Revenue::where([
+            ...$queryItems,
+            'user_id' => $request->user()->id
+        ])->paginate();
+        return new RevenueCollection($revenues->appends($request->query()));
     }
 
     /**
@@ -42,23 +34,25 @@ class RevenueController extends Controller
      */
     public function store(StoreRevenueRequest $request)
     {
-        //
+        return new RevenueResource(Revenue::create([
+            ...$request->all(),
+            'user_id' => $request->user()->id,
+            'week' => date('W', strtotime($request->date)),
+            'month' => date('n', strtotime($request->date)),
+            'year' => date('Y', strtotime($request->date)),
+        ]));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Revenue $revenue)
+    public function show(Request $request, Revenue $revenue)
     {
-        return new RevenueResource($revenue);
-    }
+        if($request->user()->cannot('show', [$revenue, RevenuePolicy::class])){
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Revenue $revenue)
-    {
-        //
+        return new RevenueResource($revenue);
     }
 
     /**
@@ -66,14 +60,26 @@ class RevenueController extends Controller
      */
     public function update(UpdateRevenueRequest $request, Revenue $revenue)
     {
-        //
+        $dateToUse = $request->date ? $request->date : $revenue->date;
+
+        $revenue->update([
+            ...$request->all(),
+            'user_id' => $request->user()->id,
+            'week' => date('W', strtotime($dateToUse)),
+            'month' => date('n', strtotime($dateToUse)),
+            'year' => date('Y', strtotime($dateToUse)),
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Revenue $revenue)
+    public function destroy(Request $request, Revenue $revenue)
     {
-        //
+        if($request->user()->cannot('delete', [$revenue, RevenuePolicy::class])){
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $revenue->delete();
     }
 }

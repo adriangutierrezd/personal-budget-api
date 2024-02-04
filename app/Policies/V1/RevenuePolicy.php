@@ -7,36 +7,22 @@ use App\Models\User;
 
 class RevenuePolicy
 {
-    /**
-     * Determine whether the user can view any models.
+
+        /**
+     * Determine whether the user can update the model.
      */
-    public function viewAny(User $user): bool
+    public function show(User $user, Revenue $revenue): bool
     {
-        //
+        return $this->revenueBelongsToUser($user, $revenue);
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Revenue $revenue): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        //
-    }
-
+    
     /**
      * Determine whether the user can update the model.
      */
     public function update(User $user, Revenue $revenue): bool
     {
-        //
+        return $this->revenueBelongsToUser($user, $revenue);
     }
 
     /**
@@ -44,22 +30,13 @@ class RevenuePolicy
      */
     public function delete(User $user, Revenue $revenue): bool
     {
-        //
+        return $this->revenueBelongsToUser($user, $revenue);
+    }
+    
+
+    private function revenueBelongsToUser(User $user, Revenue $revenue): bool
+    {
+        return $revenue->user_id == $user->id;
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Revenue $revenue): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Revenue $revenue): bool
-    {
-        //
-    }
 }
