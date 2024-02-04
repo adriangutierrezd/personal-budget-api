@@ -8,7 +8,6 @@ class ExpensesFilter extends ApiFilter{
 
     protected $allowedParams = [
         'id' => ['eq'],
-        'userId' => ['eq'],
         'categoryId' => ['eq'],
         'name' => ['eq'],
         'date' => ['eq', 'lt', 'lte', 'gt', 'gte'],
@@ -18,7 +17,6 @@ class ExpensesFilter extends ApiFilter{
     ];
 
     protected $columnMap = [
-        'userId' => 'user_id',
         'categoryId' => 'category_id'
     ];
 

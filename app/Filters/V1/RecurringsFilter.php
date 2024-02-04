@@ -8,13 +8,11 @@ class RecurringsFilter extends ApiFilter{
 
     protected $allowedParams = [
         'id' => ['eq'],
-        'userId' => ['eq'],
         'categoryId' => ['eq'],
         'name' => ['eq'],
     ];
 
     protected $columnMap = [
-        'userId' => 'user_id',
         'categoryId' => 'category_id'
     ];
 

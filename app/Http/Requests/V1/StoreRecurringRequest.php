@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class StoreRecurringRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user() != null;
     }
 
     /**
@@ -22,7 +22,20 @@ class StoreRecurringRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'categoryId' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'max:100'],
+            'description' => ['sometimes'],
+            'amount' => ['required', 'numeric']
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        if($this->categoryId){
+            $this->merge([
+                'category_id' => $this->categoryId
+            ]);
+        }
+    }
+    
 }

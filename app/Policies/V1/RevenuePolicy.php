@@ -4,7 +4,6 @@ namespace App\Policies\V1;
 
 use App\Models\Revenue;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class RevenuePolicy
 {

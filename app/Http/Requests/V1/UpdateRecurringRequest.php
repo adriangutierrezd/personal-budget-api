@@ -3,17 +3,17 @@
 namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Policies\V1\ExpensePolicy;
+use App\Policies\V1\RecurringPolicy;
 
-class UpdateExpenseRequest extends FormRequest
+class UpdateRecurringRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $expense = $this->route('expense');
-        return $this->user() != null && $this->user()->can('update', [$expense, ExpensePolicy::class]);
+        $recurring = $this->route('recurring');
+        return $this->user() != null && $this->user()->can('update', [$recurring, RecurringPolicy::class]);
     }
 
     /**
@@ -29,7 +29,6 @@ class UpdateExpenseRequest extends FormRequest
             'categoryId' => ['required', 'exists:categories,id'],
             'name' => ['required', 'max:100'],
             'description' => ['sometimes'],
-            'date' => ['required', 'date'],
             'amount' => ['required', 'numeric']
             ];
         }else{
@@ -37,7 +36,6 @@ class UpdateExpenseRequest extends FormRequest
                 'categoryId' => ['sometimes', 'required', 'exists:categories,id'],
                 'name' => ['sometimes', 'required', 'max:100'],
                 'description' => ['sometimes'],
-                'date' => ['sometimes', 'required', 'date'],
                 'amount' => ['sometimes', 'required', 'numeric']
             ];
         }

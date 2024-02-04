@@ -8,7 +8,6 @@ class RevenuesFilter extends ApiFilter{
 
     protected $allowedParams = [
         'id' => ['eq'],
-        'userId' => ['eq'],
         'name' => ['eq'],
         'date' => ['eq', 'lt', 'lte', 'gt', 'gte'],
         'week' => ['eq', 'lt', 'lte', 'gt', 'gte'],
@@ -16,9 +15,7 @@ class RevenuesFilter extends ApiFilter{
         'year' => ['eq', 'lt', 'lte', 'gt', 'gte']
     ];
 
-    protected $columnMap = [
-        'userId' => 'user_id'
-    ];
+    protected $columnMap = [];
 
     protected $operatorMap = [
         'eq' => '=',

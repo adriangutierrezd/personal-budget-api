@@ -4,32 +4,16 @@ namespace App\Policies\V1;
 
 use App\Models\Recurring;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class RecurringPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        //
-    }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can update the model.
      */
-    public function view(User $user, Recurring $recurring): bool
+    public function show(User $user, Recurring $recurring): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        //
+        return $this->recurringBelongsToUser($user, $recurring);
     }
 
     /**
@@ -37,7 +21,7 @@ class RecurringPolicy
      */
     public function update(User $user, Recurring $recurring): bool
     {
-        //
+        return $this->recurringBelongsToUser($user, $recurring);
     }
 
     /**
@@ -45,22 +29,11 @@ class RecurringPolicy
      */
     public function delete(User $user, Recurring $recurring): bool
     {
-        //
+        return $this->recurringBelongsToUser($user, $recurring);
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Recurring $recurring): bool
+    private function recurringBelongsToUser(User $user, Recurring $recurring): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Recurring $recurring): bool
-    {
-        //
+        return $recurring->user_id == $user->id;
     }
 }
