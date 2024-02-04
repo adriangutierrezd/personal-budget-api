@@ -20,7 +20,8 @@ class RecurringResource extends JsonResource
             'categoryId' => $this->category_id,
             'name' => $this->name,
             'description' => $this->description,
-            'amount' => $this->amount
+            'amount' => $this->amount,
+            'category' => new CategoryResource($this->whenLoaded('category'))
         ];
     }
 }

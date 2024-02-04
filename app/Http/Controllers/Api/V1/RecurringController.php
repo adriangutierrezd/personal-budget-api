@@ -21,12 +21,14 @@ class RecurringController extends Controller
         $filter = new RecurringsFilter();
         $queryItems = $filter->transform($request);
 
-        if(empty($queryItems)){
-            return new RecurringCollection(Recurring::paginate());
-        }else{
-            $recurrings = Recurring::where($queryItems)->paginate();
-            return new RecurringCollection($recurrings->appends($request->query()));
+        $includeCategories = $request->query('includeCategories');
+
+        $recurrings = Recurring::where($queryItems);
+        if($includeCategories){
+            $recurrings->with('category');
         }
+
+        return new RecurringCollection($recurrings->paginate()->appends($request->query()));
     }
 
     /**
@@ -50,6 +52,12 @@ class RecurringController extends Controller
      */
     public function show(Recurring $recurring)
     {
+        $includeCategories = request()->query('includeCategories');
+
+        if($includeCategories){
+            return new RecurringResource($recurring->loadMissing('category'));
+        }
+        
         return new RecurringResource($recurring);
     }
 
