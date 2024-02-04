@@ -4,7 +4,7 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class StoreExpenseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,21 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'categoryId' => ['required', 'exists:categories,id'],
             'name' => ['required', 'max:100'],
-            'color' => ['required', 'max:7']
+            'description' => ['sometimes'],
+            'date' => ['required', 'date'],
+            'amount' => ['required', 'numeric']
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        if($this->categoryId){
+            $this->merge([
+                'category_id' => $this->categoryId
+            ]);
+        }
     }
 
 }

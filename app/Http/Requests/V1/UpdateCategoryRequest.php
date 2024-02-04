@@ -4,7 +4,6 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Policies\V1\CategoryPolicy;
-use App\Models\Category;
 
 
 class UpdateCategoryRequest extends FormRequest

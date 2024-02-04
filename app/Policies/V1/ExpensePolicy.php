@@ -8,28 +8,13 @@ use Illuminate\Auth\Access\Response;
 
 class ExpensePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
-    {
-        //
-    }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can update the model.
      */
-    public function view(User $user, Expense $expense): bool
+    public function show(User $user, Expense $expense): bool
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        //
+        return $this->expenseBelongsToUser($user, $expense);
     }
 
     /**
@@ -37,7 +22,7 @@ class ExpensePolicy
      */
     public function update(User $user, Expense $expense): bool
     {
-        //
+        return $this->expenseBelongsToUser($user, $expense);
     }
 
     /**
@@ -45,22 +30,12 @@ class ExpensePolicy
      */
     public function delete(User $user, Expense $expense): bool
     {
-        //
+        return $this->expenseBelongsToUser($user, $expense);
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Expense $expense): bool
+    private function expenseBelongsToUser(User $user, Expense $expense): bool
     {
-        //
+        return $expense->user_id == $user->id;
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Expense $expense): bool
-    {
-        //
-    }
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->tinyInteger('week', false, true);
             $table->tinyInteger('month', false, true);
             $table->smallInteger('year', false, true);
-            $table->float('amount');
+            $table->float('amount', 8, 2, true);
             $table->timestamps();
         });
     }
