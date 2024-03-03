@@ -60,4 +60,7 @@ Route::group([
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('recurrings', RecurringController::class);
     Route::apiResource('revenues', RevenueController::class);
+
+    Route::get('expenses-by-category', [ExpenseController::class, 'expensesByCategory']);
+
 });

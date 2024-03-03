@@ -11,6 +11,7 @@ use App\Filters\V1\ExpensesFilter;
 use App\Http\Resources\V1\ExpenseResource;
 use Illuminate\Http\Request;
 use App\Policies\V1\ExpensePolicy;
+use Illuminate\Support\Facades\DB;
 
 class ExpenseController extends Controller
 {
@@ -98,5 +99,26 @@ class ExpenseController extends Controller
         }
 
         $expense->delete();
+    }
+
+    public function expensesByCategory(Request $request){
+        $filter = new ExpensesFilter();
+        $queryItems = $filter->transform($request);
+
+
+        $expenses = DB::table('expenses as e')
+            ->join('categories as c', 'e.category_id', '=', 'c.id')
+            ->select('c.name', 'c.color', DB::raw('ROUND(SUM(e.amount), 2) as total'))
+            ->where([
+                ...$queryItems,
+                'e.user_id' => $request->user()->id
+            ])
+            ->groupBy('e.category_id')
+            ->get();
+
+
+        return response()->json([
+            'data' => $expenses
+        ]);
     }
 }
