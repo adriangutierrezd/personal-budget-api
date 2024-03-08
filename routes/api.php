@@ -62,5 +62,7 @@ Route::group([
     Route::apiResource('revenues', RevenueController::class);
 
     Route::get('expenses-by-category', [ExpenseController::class, 'expensesByCategory']);
+    Route::get('expenses-by-month', [ExpenseController::class, 'expensesByMonth']);
+    Route::get('revenues-by-month', [RevenueController::class, 'revenuesByMonth']);
 
 });

@@ -121,4 +121,25 @@ class ExpenseController extends Controller
             'data' => $expenses
         ]);
     }
+
+
+    public function expensesByMonth(Request $request){
+        $filter = new ExpensesFilter();
+        $queryItems = $filter->transform($request);
+
+        $expenses = DB::table('expenses as e')
+            ->select(DB::raw('ROUND(SUM(amount), 2) as total'), DB::raw('CONCAT(year, "-", LPAD(month, 2, "0")) as yearMonth'))
+            ->where([
+                ...$queryItems,
+                'e.user_id' => $request->user()->id
+            ])
+            ->groupBy('yearMonth')
+            ->get();
+
+
+        return response()->json([
+            'data' => $expenses
+        ]);
+    }
+
 }

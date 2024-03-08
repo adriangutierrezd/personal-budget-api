@@ -11,6 +11,7 @@ use App\Http\Resources\V1\RevenueResource;
 use App\Filters\V1\RevenuesFilter;
 use Illuminate\Http\Request;
 use App\Policies\V1\RevenuePolicy;
+use Illuminate\Support\Facades\DB;
 
 class RevenueController extends Controller
 {
@@ -82,4 +83,25 @@ class RevenueController extends Controller
 
         $revenue->delete();
     }
+
+
+    public function revenuesByMonth(Request $request){
+        $filter = new RevenuesFilter();
+        $queryItems = $filter->transform($request);
+
+        $expenses = DB::table('revenues as e')
+            ->select(DB::raw('ROUND(SUM(amount), 2) as total'), DB::raw('CONCAT(year, "-", LPAD(month, 2, "0")) as yearMonth'))
+            ->where([
+                ...$queryItems,
+                'e.user_id' => $request->user()->id
+            ])
+            ->groupBy('yearMonth')
+            ->get();
+
+
+        return response()->json([
+            'data' => $expenses
+        ]);
+    }
+
 }
