@@ -128,12 +128,12 @@ class ExpenseController extends Controller
         $queryItems = $filter->transform($request);
 
         $expenses = DB::table('expenses as e')
-            ->select(DB::raw('ROUND(SUM(amount), 2) as total'), DB::raw('CONCAT(year, "-", LPAD(month, 2, "0")) as yearMonth'))
+            ->select('month', 'year', DB::raw('ROUND(SUM(amount), 2) as total'), DB::raw('CONCAT(year, "-", LPAD(month, 2, "0")) as yearMonth'))
             ->where([
                 ...$queryItems,
                 'e.user_id' => $request->user()->id
             ])
-            ->groupBy('yearMonth')
+            ->groupBy('yearMonth', 'month', 'year')
             ->get();
 
 
