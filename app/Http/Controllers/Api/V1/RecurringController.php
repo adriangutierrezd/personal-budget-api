@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\RecurringCollection;
 use App\Http\Resources\V1\RecurringResource;
 use App\Filters\V1\RecurringsFilter;
+use App\Models\Expense;
 use App\Policies\V1\RecurringPolicy;
 use Illuminate\Http\Request;
 
@@ -86,5 +87,21 @@ class RecurringController extends Controller
         }
 
         $recurring->delete();
+    }
+
+    public function apply(){
+        $recurrings = Recurring::all();
+        foreach($recurrings as $recurring){
+            Expense::create([
+                'user_id' => $recurring->user_id,
+                'category_id' => $recurring->category_id,
+                'amount' => $recurring->amount,
+                'name' => $recurring->name,
+                'date' => date('Y-m-d'),
+                'week' => date('W'),
+                'month' => date('n'),
+                'year' => date('Y'),
+            ]);
+        }
     }
 }

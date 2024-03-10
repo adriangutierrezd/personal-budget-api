@@ -58,6 +58,7 @@ Route::group([
         $user->save();
     });
 
+    Route::get('apply-recurring-expenses', [RecurringController::class, 'apply']);
    
 });
 
