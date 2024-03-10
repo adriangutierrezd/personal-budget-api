@@ -113,7 +113,7 @@ class ExpenseController extends Controller
                 ...$queryItems,
                 'e.user_id' => $request->user()->id
             ])
-            ->groupBy('e.category_id')
+            ->groupBy('e.category_id', 'c.name', 'c.color')
             ->get();
 
 
