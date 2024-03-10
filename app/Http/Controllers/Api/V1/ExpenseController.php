@@ -35,7 +35,7 @@ class ExpenseController extends Controller
             $expenses->with('category');
         }
 
-        return new ExpenseCollection($expenses->paginate()->appends($request->query()));
+        return new ExpenseCollection($expenses->get());
     }
 
 

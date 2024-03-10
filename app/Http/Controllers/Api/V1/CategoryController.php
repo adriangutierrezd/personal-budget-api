@@ -26,8 +26,8 @@ class CategoryController extends Controller
         $categories = Category::where([
             ...$queryItems,
             'user_id' => $request->user()->id
-        ])->paginate();
-        return new CategoryCollection($categories->appends($request->query()));
+        ])->get();
+        return new CategoryCollection($categories);
     }
 
     /**

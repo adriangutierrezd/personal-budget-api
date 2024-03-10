@@ -32,7 +32,7 @@ class RecurringController extends Controller
             $recurrings->with('category');
         }
 
-        return new RecurringCollection($recurrings->paginate()->appends($request->query()));
+        return new RecurringCollection($recurrings->get());
     }
 
     /**

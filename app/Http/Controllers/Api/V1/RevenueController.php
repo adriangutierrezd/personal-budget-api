@@ -26,8 +26,8 @@ class RevenueController extends Controller
         $revenues = Revenue::where([
             ...$queryItems,
             'user_id' => $request->user()->id
-        ])->paginate();
-        return new RevenueCollection($revenues->appends($request->query()));
+        ])->get();
+        return new RevenueCollection($revenues);
     }
 
     /**
