@@ -23,7 +23,9 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'max:100'],
-            'color' => ['required', 'max:7']
+            'color' => ['required', 'max:7'],
+            'type' => ['required', 'in:EQUITY,EXPENSES'],
+
         ];
     }
 

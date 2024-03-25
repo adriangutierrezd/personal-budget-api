@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Filters\V1;
-
-use Illuminate\Http\Request;
 use App\Filters\ApiFilter;
 
 class CategoriesFilter extends ApiFilter{
@@ -10,7 +8,8 @@ class CategoriesFilter extends ApiFilter{
     protected $allowedParams = [
         'id' => ['eq'],
         'name' => ['eq'],
-        'color' => ['eq']
+        'color' => ['eq'],
+        'type' => ['eq']
     ];
 
     protected $columnMap = [];
