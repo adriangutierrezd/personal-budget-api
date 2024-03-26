@@ -11,6 +11,7 @@ use App\Filters\V1\EquityStatementsFilter;
 use App\Http\Resources\V1\EquityStatementResource;
 use Illuminate\Http\Request;
 use App\Policies\V1\EquityStatementPolicy;
+use Illuminate\Support\Facades\DB;
 
 class EquityStatementController extends Controller
 {
@@ -30,7 +31,7 @@ class EquityStatementController extends Controller
             'user_id' => $request->user()->id
         ]);
 
-        if($includeCategories){
+        if ($includeCategories) {
             $expenses->with('category');
         }
 
@@ -57,16 +58,16 @@ class EquityStatementController extends Controller
      */
     public function show(Request $request, EquityStatement $equityStatement)
     {
-        if($request->user()->cannot('show', [$equityStatement, EquityStatementPolicy::class])){
+        if ($request->user()->cannot('show', [$equityStatement, EquityStatementPolicy::class])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $includeCategories = request()->query('includeCategories');
 
-        if($includeCategories){
+        if ($includeCategories) {
             return new EquityStatementResource($equityStatement->loadMissing('category'));
         }
-        
+
         return new EquityStatementResource($equityStatement);
     }
 
@@ -93,11 +94,37 @@ class EquityStatementController extends Controller
      */
     public function destroy(Request $request, EquityStatement $equityStatement)
     {
-        if($request->user()->cannot('delete', [$equityStatement, EquityStatementPolicy::class])){
+        if ($request->user()->cannot('delete', [$equityStatement, EquityStatementPolicy::class])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         $equityStatement->delete();
     }
 
+
+    public function equityPerDate(Request $request)
+    {
+        $filter = new EquityStatementsFilter();
+        $queryItems = $filter->transform($request);
+
+        $expenses = EquityStatement::select(
+            'date',
+            'week',
+            'month',
+            'year',
+            DB::raw('CONCAT(year, "-", LPAD(month, 2, "0")) as yearMonth'),
+            DB::raw('ROUND(SUM(CASE WHEN type = \'ASSET\' THEN amount ELSE amount * -1 END), 2) as totalEquity')
+        )
+            ->where([
+                ...$queryItems,
+                'user_id' => $request->user()->id
+            ])
+            ->groupBy('yearMonth', 'month', 'year', 'week', 'date')
+            ->get();
+
+
+        return response()->json([
+            'data' => $expenses
+        ]);
+    }
 }
