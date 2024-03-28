@@ -87,6 +87,8 @@ class EquityStatementController extends Controller
             'month' => date('n', strtotime($dateToUse)),
             'year' => date('Y', strtotime($dateToUse)),
         ]);
+
+        return new EquityStatementResource(EquityStatement::find($equityStatement->id));
     }
 
     /**
