@@ -12,7 +12,7 @@ class UpdateEquityStatementRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $expense = $this->route('equityStatement');
+        $expense = $this->route('equity_statement');
         return $this->user() != null && $this->user()->can('update', [$expense, EquityStatementPolicy::class]);
     }
 
