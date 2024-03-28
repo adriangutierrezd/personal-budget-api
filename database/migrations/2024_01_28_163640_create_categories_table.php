@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name', 100);
             $table->string('color', 7);
+            $table->enum('type', ['EQUITY', 'EXPENSES'])->default('EXPENSES');
             $table->timestamps();
         });
     }

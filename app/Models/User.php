@@ -59,4 +59,8 @@ class User extends Authenticatable
         return $this->hasMany(Recurring::class);
     }
 
+    public function equityStatements(){
+        return $this->hasMany(EquityStatement::class);
+    }
+
 }

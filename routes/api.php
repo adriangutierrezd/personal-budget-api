@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\EquityStatementController;
 use App\Http\Controllers\Api\V1\ExpenseController;
 use App\Http\Controllers\Api\V1\RecurringController;
 use App\Http\Controllers\Api\V1\RevenueController;
@@ -71,9 +72,12 @@ Route::group([
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('recurrings', RecurringController::class);
     Route::apiResource('revenues', RevenueController::class);
+    Route::apiResource('equity-statements', EquityStatementController::class);
+
 
     Route::get('expenses-by-category', [ExpenseController::class, 'expensesByCategory']);
     Route::get('expenses-by-month', [ExpenseController::class, 'expensesByMonth']);
     Route::get('revenues-by-month', [RevenueController::class, 'revenuesByMonth']);
+    Route::get('equity-per-date', [EquityStatementController::class, 'equityPerDate']);
 
 });
