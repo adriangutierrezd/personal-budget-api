@@ -115,13 +115,17 @@ class EquityStatementController extends Controller
             'month',
             'year',
             DB::raw('CONCAT(year, "-", LPAD(month, 2, "0")) as yearMonth'),
-            DB::raw('ROUND(SUM(CASE WHEN type = \'ASSET\' THEN amount ELSE amount * -1 END), 2) as totalEquity')
+            DB::raw('ROUND(SUM(CASE WHEN type = \'ASSET\' THEN amount ELSE amount * -1 END), 2) as totalEquity'),
+            DB::raw('ROUND(SUM(CASE WHEN type = \'ASSET\' THEN amount ELSE 0 END), 2) as totalAssets'),
+            DB::raw('ROUND(SUM(CASE WHEN type = \'ASSET\' THEN 0 ELSE amount END), 2) as totalLiabilities')
+            
         )
             ->where([
                 ...$queryItems,
                 'user_id' => $request->user()->id
             ])
             ->groupBy('yearMonth', 'month', 'year', 'week', 'date')
+            ->orderBy('date', 'asc')
             ->get();
 
 
